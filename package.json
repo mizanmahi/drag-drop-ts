@@ -1,0 +1,13 @@
+{
+  "name": "typescript-drag-and-drop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "mizanmahi <mizanmahi24@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "lite-server"
+  },
+  "dependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
