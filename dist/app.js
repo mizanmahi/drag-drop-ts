@@ -8,11 +8,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-function BindThis(target, methodName, descriptor) {
-    console.log('decorator ran...');
-    console.log(descriptor);
-    return {};
-}
+const BindThis = (target, methodName, descriptor) => ({
+    configurable: true,
+    enumerable: false,
+    get() {
+        return descriptor.value.bind(this);
+    }
+});
+const validate = (validating) => {
+    let validated = true;
+    let { value, required, maxLen, minLen, max, min } = validating;
+    if (required) {
+        validated = validated && value.toString().length !== 0;
+    }
+    if (maxLen != null && typeof value === 'string') {
+        validated = validated && value.length <= maxLen;
+    }
+    if (minLen != null && typeof value === 'string') {
+        validated = validated && value.length >= minLen;
+    }
+    if (max != null && typeof value === 'number') {
+        validated = validated && value <= max;
+    }
+    if (min != null && typeof value === 'number') {
+        validated = validated && value >= min;
+    }
+    return validated;
+};
 class ProjectInput {
     constructor() {
         this.formtemplate = document.getElementById('project-input');
@@ -31,8 +53,21 @@ class ProjectInput {
         e.preventDefault();
         const title = this.titleInputEl.value;
         const description = this.descriptionInputEl.value;
-        const people = this.peopleInputEl.value;
-        console.log({ title, description, people });
+        const people = +this.peopleInputEl.value;
+        if (validate({ value: title, required: true }) &&
+            validate({ value: description, required: true, minLen: 10 }) &&
+            validate({ value: people, required: true, min: 2 })) {
+            console.log(title);
+            this.clearInputs();
+        }
+        else {
+            alert('Please input valid data');
+        }
+    }
+    clearInputs() {
+        this.titleInputEl.value = '';
+        this.peopleInputEl.value = '';
+        this.descriptionInputEl.value = '';
     }
     configure() {
         this.formElement.addEventListener('submit', this.submitHandler);
