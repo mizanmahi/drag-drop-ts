@@ -111,23 +111,39 @@ class ProjectInput {
   }
 }
 
-
 const input = new ProjectInput();
 
 // ? Project List class
-
 class ProjectList{
   projectListTemplate: HTMLTemplateElement;
   projectsElement: HTMLElement;
   hostElement: HTMLDivElement;
 
-  constructor(){
+  constructor(private type: 'active' | 'finished'){
     this.projectListTemplate = document.getElementById(
       'project-list'
     ) as HTMLTemplateElement;
-    
+
     const importedNode = document.importNode(this.projectListTemplate.content, true);
     this.hostElement = document.getElementById("app") as HTMLDivElement;
     this.projectsElement = importedNode.firstElementChild as HTMLElement; 
+    // ? adding an id base on type
+    this.projectsElement.id = `${this.type}-project`;
+
+    this.attach();
+    this.renderContent();
+  }
+
+  private renderContent(){
+    const listId = `${this.type}-project-list`;
+    this.projectsElement.querySelector('ul')!.id = listId;
+    this.projectsElement.querySelector('h2')!.innerText = this.type.toUpperCase() + " PROJECTS";
+  }
+
+  private attach(){
+    this.hostElement.insertAdjacentElement('beforeend', this.projectsElement);
+    console.log(this.projectsElement);
   }
 }
+
+const projects = new ProjectList("finished");

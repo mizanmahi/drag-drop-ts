@@ -84,7 +84,24 @@ __decorate([
 ], ProjectInput.prototype, "submitHandler", null);
 const input = new ProjectInput();
 class ProjectList {
-    constructor() {
+    constructor(type) {
+        this.type = type;
         this.projectListTemplate = document.getElementById('project-list');
+        const importedNode = document.importNode(this.projectListTemplate.content, true);
+        this.hostElement = document.getElementById("app");
+        this.projectsElement = importedNode.firstElementChild;
+        this.projectsElement.id = `${this.type}-project`;
+        this.attach();
+        this.renderContent();
+    }
+    renderContent() {
+        const listId = `${this.type}-project-list`;
+        this.projectsElement.querySelector('ul').id = listId;
+        this.projectsElement.querySelector('h2').innerText = this.type.toUpperCase() + " PROJECTS";
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.projectsElement);
+        console.log(this.projectsElement);
     }
 }
+const projects = new ProjectList("finished");
