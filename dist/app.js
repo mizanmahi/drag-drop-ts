@@ -54,9 +54,9 @@ class ProjectInput {
         const title = this.titleInputEl.value;
         const description = this.descriptionInputEl.value;
         const people = +this.peopleInputEl.value;
-        if (validate({ value: title, required: true }) &&
-            validate({ value: description, required: true, minLen: 10 }) &&
-            validate({ value: people, required: true, min: 2 })) {
+        if (!validate({ value: title, required: true }) ||
+            !validate({ value: description, required: true, minLen: 10 }) ||
+            !validate({ value: people, required: true, min: 2 })) {
             console.log(title);
             this.clearInputs();
         }
@@ -83,3 +83,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectInput.prototype, "submitHandler", null);
 const input = new ProjectInput();
+class ProjectList {
+    constructor() {
+        this.projectListTemplate = document.getElementById('project-list');
+    }
+}

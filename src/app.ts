@@ -111,7 +111,23 @@ class ProjectInput {
   }
 }
 
+
 const input = new ProjectInput();
 
-// const wrapper = document.querySelector(".wrapper")!;
-// console.log(wrapper.childNodes);
+// ? Project List class
+
+class ProjectList{
+  projectListTemplate: HTMLTemplateElement;
+  projectsElement: HTMLElement;
+  hostElement: HTMLDivElement;
+
+  constructor(){
+    this.projectListTemplate = document.getElementById(
+      'project-list'
+    ) as HTMLTemplateElement;
+    
+    const importedNode = document.importNode(this.projectListTemplate.content, true);
+    this.hostElement = document.getElementById("app") as HTMLDivElement;
+    this.projectsElement = importedNode.firstElementChild as HTMLElement; 
+  }
+}
