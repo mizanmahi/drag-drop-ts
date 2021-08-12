@@ -13,7 +13,7 @@ const BindThis = (target, methodName, descriptor) => ({
     enumerable: false,
     get() {
         return descriptor.value.bind(this);
-    }
+    },
 });
 const validate = (validating) => {
     let validated = true;
@@ -35,6 +35,32 @@ const validate = (validating) => {
     }
     return validated;
 };
+class Component {
+    constructor() { }
+}
+class ProjectState {
+    constructor() {
+        this.projects = [];
+        this.listener = [];
+    }
+    static getInstance() {
+        if (this.instance)
+            return this.instance;
+        this.instance = new ProjectState();
+        return this.instance;
+    }
+    addListener(fn) {
+        this.listener.push(fn);
+    }
+    addProject(title, description, people) {
+        const newProject = new Project(Math.floor(Math.random() * 989898989), title, description, people, projectStatus.active);
+        this.projects.push(newProject);
+        for (const listener of this.listener) {
+            listener(this.projects.slice());
+        }
+    }
+}
+const projectState = ProjectState.getInstance();
 class ProjectInput {
     constructor() {
         this.formtemplate = document.getElementById('project-input');
@@ -54,10 +80,10 @@ class ProjectInput {
         const title = this.titleInputEl.value;
         const description = this.descriptionInputEl.value;
         const people = +this.peopleInputEl.value;
-        if (!validate({ value: title, required: true }) ||
-            !validate({ value: description, required: true, minLen: 10 }) ||
-            !validate({ value: people, required: true, min: 2 })) {
-            console.log(title);
+        if (validate({ value: title, required: true }) &&
+            validate({ value: description, required: true, minLen: 10 }) &&
+            validate({ value: people, required: true, min: 2 })) {
+            projectState.addProject(title, description, people);
             this.clearInputs();
         }
         else {
@@ -82,26 +108,64 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ProjectInput.prototype, "submitHandler", null);
-const input = new ProjectInput();
 class ProjectList {
     constructor(type) {
         this.type = type;
         this.projectListTemplate = document.getElementById('project-list');
         const importedNode = document.importNode(this.projectListTemplate.content, true);
-        this.hostElement = document.getElementById("app");
+        this.hostElement = document.getElementById('app');
         this.projectsElement = importedNode.firstElementChild;
         this.projectsElement.id = `${this.type}-project`;
+        this.assignedProjects = [];
+        projectState.addListener((projects) => {
+            const relevantProjects = projects.filter(proj => {
+                if (this.type === 'active') {
+                    return proj.status === projectStatus.active;
+                }
+                else {
+                    return proj.status === projectStatus.finished;
+                }
+            });
+            this.assignedProjects = relevantProjects;
+            this.renderProjects();
+        });
         this.attach();
         this.renderContent();
+    }
+    renderProjects() {
+        const ul = document.getElementById(`${this.type}-project-list`);
+        ul.innerHTML = ``;
+        for (const project of this.assignedProjects) {
+            const li = document.createElement('li');
+            li.textContent = project.title;
+            ul.appendChild(li);
+        }
     }
     renderContent() {
         const listId = `${this.type}-project-list`;
         this.projectsElement.querySelector('ul').id = listId;
-        this.projectsElement.querySelector('h2').innerText = this.type.toUpperCase() + " PROJECTS";
+        this.projectsElement.querySelector('h2').innerText =
+            this.type.toUpperCase() + ' PROJECTS';
     }
     attach() {
         this.hostElement.insertAdjacentElement('beforeend', this.projectsElement);
-        console.log(this.projectsElement);
     }
 }
-const projects = new ProjectList("finished");
+var projectStatus;
+(function (projectStatus) {
+    projectStatus[projectStatus["active"] = 0] = "active";
+    projectStatus[projectStatus["finished"] = 1] = "finished";
+})(projectStatus || (projectStatus = {}));
+class Project {
+    constructor(id, title, description, people, status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.people = people;
+        this.status = status;
+    }
+}
+const input = new ProjectInput();
+const activeProjects = new ProjectList('active');
+const finishedProjects = new ProjectList('finished');
+//# sourceMappingURL=app.js.map
