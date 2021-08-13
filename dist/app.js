@@ -93,7 +93,7 @@ class ProjectInput extends Component {
         const people = +this.peopleInputEl.value;
         if (validate({ value: title, required: true }) &&
             validate({ value: description, required: true, minLen: 10 }) &&
-            validate({ value: people, required: true, min: 2 })) {
+            validate({ value: people, required: true, min: 1 })) {
             projectState.addProject(title, description, people);
             this.clearInputs();
         }
@@ -125,13 +125,12 @@ class ProjectItem extends Component {
         this.renderContent();
     }
     configure() { }
-    ;
     renderContent() {
         this.element.querySelector('h2').innerText = this.project.title;
-        this.element.querySelector('h3').innerText = this.project.people.toString();
+        this.element.querySelector('h3').innerText =
+            this.project.people.toString() + ` ${this.project.people > 1 ? 'Persons' : 'Person'} assigned`;
         this.element.querySelector('p').innerText = this.project.description;
     }
-    ;
 }
 class ProjectList extends Component {
     constructor(type) {

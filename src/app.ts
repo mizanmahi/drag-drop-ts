@@ -163,7 +163,7 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     if (
       validate({ value: title, required: true }) &&
       validate({ value: description, required: true, minLen: 10 }) &&
-      validate({ value: people, required: true, min: 2 })
+      validate({ value: people, required: true, min: 1 })
     ) {
       projectState.addProject(title, description, people);
       this.clearInputs();
@@ -193,16 +193,17 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
     super('single-project', hostId, 'afterbegin', project.id);
     this.project = project;
 
-    this.configure()
-    this.renderContent()
+    this.configure();
+    this.renderContent();
   }
 
-  configure(){};
-  renderContent(){
+  configure() {}
+  renderContent() {
     this.element.querySelector('h2')!.innerText = this.project.title;
-    this.element.querySelector('h3')!.innerText = this.project.people.toString();
+    this.element.querySelector('h3')!.innerText = 
+      this.project.people.toString() + ` ${this.project.people > 1 ? 'Persons' : 'Person'} assigned`;
     this.element.querySelector('p')!.innerText = this.project.description;
-  };
+  }
 }
 
 // ? Project List class
@@ -218,7 +219,9 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   }
 
   private renderProjects() {
-    const ul = document.getElementById(`${this.type}-project-list`)! as HTMLUListElement;
+    const ul = document.getElementById(
+      `${this.type}-project-list`
+    )! as HTMLUListElement;
     ul.innerHTML = ``;
     for (const project of this.assignedProjects) {
       new ProjectItem(this.element.querySelector('ul')!.id, project);
