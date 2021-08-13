@@ -9,6 +9,7 @@ html {
 body {
   margin: 0;
   padding: 0 1rem;
+  background: #dfe4ea;
 }
 
 label,
@@ -60,7 +61,10 @@ button:active {
 
 .projects {
   margin: 1rem;
-  border: 1px solid slateblue;
+  /* border: 1px solid slateblue; */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
+  border-radius: 10px;
+  background: #fff;
 }
 
 .projects header {
@@ -69,6 +73,11 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 5px;
+}
+
+#finished-project header{
+  background: rgb(6, 56, 6);
 }
 
 #finished-projects {
@@ -125,7 +134,7 @@ button:active {
 #user-input {
   margin: 1rem;
   padding: 1rem;
-  border: 1px solid slateblue;
+  /* border: 1px solid slateblue; */
   background: #f7f7f7;
   border-radius: 5px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
