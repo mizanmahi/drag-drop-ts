@@ -5,9 +5,16 @@
   "author": "mizanmahi <mizanmahi24@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "lite-server"
+    "start": "npx webpack serve",
+    "build": "webpack --config webpack.config.prod.js"
   },
-  "dependencies": {
-    "lite-server": "^2.6.1"
+  "dependencies": {},
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.3.5",
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   }
 }
